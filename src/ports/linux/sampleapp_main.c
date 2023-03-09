@@ -35,13 +35,22 @@
 #include <string.h>
 #include <unistd.h>
 
+
+
+//----------------
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
+//---------------
+
 #if PNET_MAX_PHYSICAL_PORTS == 1
 #define APP_DEFAULT_ETHERNET_INTERFACE "eth0"
 #else
 #define APP_DEFAULT_ETHERNET_INTERFACE "br0,eth0,eth1"
 #endif
 
-#define APP_MAIN_SLEEPTIME_US          5000 * 1000
+#define APP_MAIN_SLEEPTIME_US          100 * 1000
 #define APP_SNMP_THREAD_PRIORITY       1
 #define APP_SNMP_THREAD_STACKSIZE      256 * 1024 /* bytes */
 #define APP_ETH_THREAD_PRIORITY        10
@@ -57,6 +66,117 @@
 app_args_t app_args = {0};
 
 /************************* Utilities ******************************************/
+
+
+/*------------MY_CODE----------МАСТЕР->ПК----------------*/
+
+char name[] = "profi_memory";
+int  fd;
+struct stat my_stat;
+unsigned char* art_data;
+//int length ;
+
+
+void init_shared_memory_out()
+{
+   if ((fd = shm_open(name, O_EXCL|O_CREAT|O_RDWR, 0777)) == -1)
+   {
+        printf("\n");
+   }
+   else
+   {
+      printf("Память создана\n");
+      if (ftruncate(fd, APP_GSDML_OUTPUT_DATA_DIGITAL_SIZE) == -1)
+      {
+         printf("Ошибка определения размера памяти\n");
+      }
+      else
+      {
+         printf("Установлен размер памяти\n");
+      }
+      art_data = mmap(NULL, APP_GSDML_OUTPUT_DATA_DIGITAL_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+      close(fd);
+   }
+
+    
+    
+    
+    
+    
+    
+    
+    if ( (fd = shm_open(name, O_RDWR, 0777)) == -1 ) {
+        printf("Ошибка открытия\n");
+      
+     } else {
+        printf("Объект открыт\n");
+     }
+    
+    fstat(fd, &my_stat); //узнаем размер объекта разделяемой памяти
+    art_data = mmap(NULL, my_stat.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    close(fd);
+    
+}
+
+/*------------MY_CODE--------------------------*/
+
+/*------------MY_CODE----------ПК->МАСТЕР----------------*/
+char name_in[] = "profi_memory_in";
+   int fd_in;
+   struct stat stat_in;
+   unsigned char* art_data_in;
+
+void init_shared_memory_in()
+{
+   
+   
+   
+   if ((fd_in = shm_open(name_in, O_EXCL|O_CREAT|O_RDWR, 0777)) == -1)
+   {
+        printf("\n");
+   }
+   else
+   {
+      printf("Память создана\n");
+      if (ftruncate(fd_in, APP_GSDML_INPUT_DATA_DIGITAL_SIZE) == -1)
+      {
+         printf("Ошибка определения размера памяти\n");
+      }
+      else
+      {
+         printf("Установлен размер памяти\n");
+      }
+      art_data_in = mmap(NULL, APP_GSDML_OUTPUT_DATA_DIGITAL_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd_in, 0);
+      close(fd_in);
+   }
+   
+   
+   
+   if ( (fd_in = shm_open(name_in, O_RDONLY, 0777)) == -1 ) {
+        printf("Ошибка открытия\n");
+     } 
+   else 
+     {
+        printf("Объект открыт\n");
+     }
+   fstat(fd_in, &stat_in); //узнаем размер объекта разделяемой памяти
+   art_data_in = mmap(NULL, stat_in.st_size, PROT_READ, MAP_SHARED, fd_in, 0);
+
+  /* for (int i = 0; i < stat_in.st_size; i++)
+    {
+        printf("%d ", art_data_in[i]); 
+    } 
+    printf("\n"); */
+
+   close(fd_in);
+
+    
+}
+/*------------MY_CODE--------------------------*/
+
+
+
+
 
 void show_usage()
 {
@@ -389,6 +509,18 @@ static int app_pnet_cfg_init_storage (
 
 int main (int argc, char * argv[])
 {
+   
+   
+   
+   
+   
+   
+
+   init_shared_memory_out();
+   init_shared_memory_in();
+   
+   
+   
    int ret;
    int32_t app_log_level = APP_LOG_LEVEL_FATAL;
    pnet_cfg_t pnet_cfg = {0};

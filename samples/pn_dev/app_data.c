@@ -28,6 +28,11 @@
 
 #define APP_DATA_DEFAULT_OUTPUT_DATA 0
 
+/*---------*/
+extern unsigned char* art_data;
+extern unsigned char* art_data_in;
+/*---------*/
+
 /* Parameter data for digital submodules
  * The stored value is shared between all digital submodules in this example.
  *
@@ -47,7 +52,7 @@ static uint32_t app_param_echo_gain = 1; /* Network endianness */
  * The stored value is shared between all digital submodules in this example. */
 static uint8_t inputdata[APP_GSDML_INPUT_DATA_DIGITAL_SIZE] = {0};
 static uint8_t outputdata[APP_GSDML_OUTPUT_DATA_DIGITAL_SIZE] = {0};
-static uint8_t counter = 0;
+//static uint8_t counter = 0;
 
 /* Network endianness */
 static uint8_t echo_inputdata[APP_GSDML_INPUT_DATA_ECHO_SIZE] = {0};
@@ -115,7 +120,7 @@ uint8_t * app_data_get_input_data (
       /* Prepare digital input data
        * Lowest 7 bits: Counter    Most significant bit: Button
        */
-      inputdata[0] = counter++;
+      /*inputdata[0] = counter++;
       if (button_pressed)
       {
          inputdata[0] |= 0x80;
@@ -123,7 +128,17 @@ uint8_t * app_data_get_input_data (
       else
       {
          inputdata[0] &= 0x7F;
-      }
+      }*/
+      //inputdata[0] = 1;
+      /*for (int q =0; q < *size; q++)
+        {
+            inputdata[q] = art_data_in[q];
+            printf("%d\n", inputdata[0]);
+        }*/
+
+        inputdata[0] = art_data_in[0];
+        //printf("%d\n", inputdata[0]);
+
 
       *size = APP_GSDML_INPUT_DATA_DIGITAL_SIZE;
       *iops = PNET_IOXS_GOOD;
@@ -185,7 +200,28 @@ int app_data_set_output_data (
          /* Most significant bit: LED */
          led_state = (outputdata[0] & 0x80) > 0;
          app_handle_data_led_state (led_state);
+         /*printf("0 :%d\n", outputdata[0]);
+         printf("1 :%d\n", outputdata[1]);
+         printf("2 :%d\n", outputdata[2]);
+         printf("3 :%d\n", outputdata[3]);*/
+         
+         
+         //uint8_t a = outputdata[2];
+         //uint8_t b = outputdata[3];
+         //uint16_t value1 = 0;
+         //value1 = a<<8 | b;
+         //printf("WORD: %d\n", value1);
 
+
+
+        //-------
+        for (int q =0; q< size; q++)
+        {
+            art_data[q] = outputdata[q];
+        }
+        
+        //--------
+         
          return 0;
       }
    }
@@ -285,7 +321,7 @@ int app_data_read_parameter (
    {
       APP_LOG_WARNING (
          "PLC read request unsupported length. "
-         "Index: %u Max length: %u Data length for our parameter: %u\n",
+         "Index: %u Length: %u Expected length: %u\n",
          (unsigned)index,
          (unsigned)*length,
          par_cfg->length);
