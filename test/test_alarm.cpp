@@ -39,8 +39,7 @@ TEST_F (AlarmUnitTest, AlarmCheckAddDiagItemToSummary)
    /* Prepare default input data */
    memset (&ar, 0, sizeof (ar));
    memset (&subslot, 0, sizeof (subslot));
-   subslot.ownsm_state = PF_OWNSM_STATE_IOC;
-   subslot.owner = &ar;
+   subslot.p_ar = &ar;
 
    memset (&diag_item, 0, sizeof (diag_item));
    diag_item.usi = PF_USI_EXTENDED_CHANNEL_DIAGNOSIS;
@@ -67,7 +66,7 @@ TEST_F (AlarmUnitTest, AlarmCheckAddDiagItemToSummary)
    EXPECT_EQ (maint_status, 0UL);
 
    /* Other AR */
-   subslot.owner = NULL;
+   subslot.p_ar = NULL;
 
    memset (&alarm_specifier, 0, sizeof (alarm_specifier));
    maint_status = 0;
@@ -82,7 +81,7 @@ TEST_F (AlarmUnitTest, AlarmCheckAddDiagItemToSummary)
    EXPECT_TRUE ((bool)alarm_specifier.submodule_diagnosis);
    EXPECT_FALSE ((bool)alarm_specifier.ar_diagnosis);
    EXPECT_EQ (maint_status, 0UL);
-   subslot.owner = &ar;
+   subslot.p_ar = &ar;
 
    /* Manufacturer specific (in USI format) */
    diag_item.usi = TEST_DIAG_USI_CUSTOM;

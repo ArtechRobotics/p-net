@@ -1,11 +1,9 @@
-.. _getting-started-LAN9662:
-
 LAN9662
 =======
 
 Introduction
 ------------
-Note: Add description of LAN9662 when data sheet is available.
+Add description of LAN9662 when datasheet is available.
 
 For links to Microchip LAN9662 resources see section  :ref:`lan9662-resources`.
 
@@ -14,7 +12,7 @@ Known limitations:
 - One byte write operations are not supported from
   LAN9662 RTE to the I/O FPGA. This means the sample submodule
   Digital Output 1x8 is not working in full rte mode.
-- Submodule default values are not applied on AR tear down
+- Submodule default values are not applied on AR teardown
   in full rte mode.
 
 LAN9662 Profinet Solution
@@ -40,8 +38,8 @@ When hardware offload is enabled all process data by default is mapped to SRAM
 by P-Net and the application uses the P-Net API the same way as usual.
 
 To map the process data to a QSPI interface the application uses the P-Net API functions
-:c:func:`pnet_mera_input_set_rte_config` for input data and
-:c:func:`pnet_mera_output_set_rte_config` for output data.
+``pnet_mera_input_set_rte_config()`` for input data and
+``pnet_mera_output_set_rte_config()`` for output data.
 When a QSPI data source or sink is configured the process data
 is handled by the configured HW device and not by the application.
 The P-Net stack still keeps a copy of the process data in SRAM
@@ -73,7 +71,7 @@ Table below shows how the the P-Net API for handling the process data is affecte
 
 Build-time configuration
 ------------------------
-Support for LAN9662 features in the P-Net stack is enabled using the following CMake options:
+Support for LAN9962 features in the P-Net stack is enabled using the following CMake options:
 
 - PNET_OPTION_DRIVER_ENABLE - Enable the P-Net support for hardware drivers in general
 - PNET_OPTION_DRIVER_LAN9662 - Enable the support for the LAN9662 driver
@@ -86,9 +84,9 @@ The LAN9662 sample is built with the following P-Net options::
     set(PNET_OPTION_DRIVER_ENABLE ON)
     set(PNET_OPTION_DRIVER_LAN9662 ON)
     set(PNET_OPTION_LAN9662_SHOW_RTE_INFO OFF)
-    set(PNET_MAX_PHYSICAL_PORTS "2" CACHE STRING "LAN9662 2 Ports" FORCE)
-    set(PNET_MAX_SLOTS "13" CACHE STRING "LAN9662 sample application" FORCE)
-    set(PNET_MAX_SUBSLOTS "4" CACHE STRING "LAN9662 2 Ports" FORCE)
+    set(PNET_MAX_PHYSICAL_PORTS "2" CACHE STRING "LAN9962 2 Ports" FORCE)
+    set(PNET_MAX_SLOTS "13" CACHE STRING "LAN9962 sample application" FORCE)
+    set(PNET_MAX_SUBSLOTS "4" CACHE STRING "LAN9962 2 Ports" FORCE)
     set(LOG_LEVEL "FATAL" CACHE STRING "Enable logging" FORCE)
 
 
@@ -104,26 +102,25 @@ The driver_config parameter contains base IDs for various resources in the LAN96
 In a system where P-Net is the only feature using the RTE these don't need to be considered.
 If not, the IDs must be set not to conflict with other parts of the system.
 
-Input data is mapped to QSPI using the operation :c:func:`pnet_input_set_rte_config`.
-Output data is mapped to QSPI using the operation :c:func:`pnet_output_set_rte_config`.
+Input data is mapped to QSPI using the operation ``pnet_input_set_rte_config()``.
+Output data is mapped to QSPI using the operation ``pnet_output_set_rte_config()``.
 
 
 EVB-LAN9662
 -----------
 Both the default P-Net sample application and the LAN9662 sample application can be run on the EVB-LAN9662.
-Utility scripts for configuration of LEDs and buttons and starting the applications are provided in
-the :file:`p-net/samples/pn_dev_lan9662/` directory.
+Utility scripts for configuration of LEDs and buttons and starting the applications are provided in the ``p-net/samples/pn_dev_lan9662/`` directory.
 EVB-LAN9662 Features used by P-Net samples:
 
 - Shell is available on the EVB-LAN9662 USB connector marked ``CONSOLE``. Use 115200 baud, no flow control.
 - The io-fpga is connected to the EVB-LAN9662-Carrier USB connector marked ``FPGA SPI``.
-- Two Ethernet ports are supported. Sample scripts show how to configure a network bridge.
+- Two ethernet ports are supported. Sample scripts show how to configure a network bridge.
 
 LAN9662 Sample Application
 --------------------------
 
 The application focus on the process data and its mapping to the RTE.
-The source code is is found in :file:`/p-net/samples/pn_dev_lan9662/`.
+The source code is is found in ``/p-net/samples/pn_dev_lan9662/``.
 The sample application builds for and runs on the EVB-LAN9662.
 
 It supports the following I/O-data:
@@ -146,7 +143,7 @@ It supports the following I/O-data:
 ============== ======================= =========================================== ============
 
 Note that the I/Os on slots 11 and 12 are available at the EVB-LAN9662 pin lists IN-A and OUT-A.
-The sample application gsdml file is available at :file:`/p-net/samples/pn_dev_lan9662/`.
+The sample application gsdml file is available at ``/p-net/samples/pn_dev_lan9662/``.
 
 The application has three modes of operation. The mode is a runtime configuration defined by the mode (-m) argument:
 
@@ -189,7 +186,7 @@ See :ref:`lan9662-resources` for further information on the io-fpga tool.
 
 Running the LAN9662 Sample Application
 --------------------------------------
-Start the LAN992 sample application using the script :file:`switchdev-profinet-example.sh`.
+Start the LAN992 sample application using the script ``switchdev-profinet-example.sh``.
 The log from a scenario with a PLC using input port A and output port A is shown below.
 
 log::
@@ -350,16 +347,16 @@ log::
 
 Building the LAN9662 Sample Application
 ---------------------------------------
-Note: Add step by step guide describing how to build the LAN9662
+Add step by step guide describing how to build the LAN9662
 sample application and which Microchip resources to download
 when that information is available.
 
 
-P-Net on LAN9662 Application Summary
+P-Net on LAN9962 Application Summary
 ------------------------------------
-- To map process data to QSPI the application must use the operations :c:func:`pnet_output_set_rte_config` and :c:func:`pnet_input_set_rte_config`.
+- To map process data to QSPI the application must use the operations ``pnet_output_set_rte_config()`` and ``pnet_input_set_rte_config()``
 - If process data is handled by the application and not mapped to QSPI the hardware offload can be enabled and used without any change in the application. API usage is identical except that the hardware offload is enabled during stack initialization.
-- :file:`p-net/samples/pn_dev_lan9662/switchdev-profinet-example.sh` shows the required systems configurations for a 2 port Profinet device application.
+- ``p-net/samples/pn_dev_lan9662/switchdev-profinet-example.sh`` shows the required systems configurations for a 2 port Profinet device application.
 
 .. _lan9662-resources:
 
@@ -380,3 +377,4 @@ Documentation and data sheets:
 
 - http://mscc-ent-open-source.s3-eu-west-1.amazonaws.com/public_root/bsp/mscc-brsdk-doc-2021.09.html
 - Add more documents when LAN9662 documentation is available.
+

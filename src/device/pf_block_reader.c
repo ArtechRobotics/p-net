@@ -277,39 +277,40 @@ static void pf_get_iocr_api_entry (
 static void pf_get_exp_submodule (
    pf_get_info_t * p_info,
    uint16_t * p_pos,
-   pf_exp_submodule_t * submodule)
+   pf_exp_submodule_t * p_sub)
 {
    uint16_t temp_u16;
 
-   submodule->subslot_number = pf_get_uint16 (p_info, p_pos);
-   submodule->ident_number = pf_get_uint32 (p_info, p_pos);
+   p_sub->subslot_number = pf_get_uint16 (p_info, p_pos);
+   p_sub->submodule_ident_number = pf_get_uint32 (p_info, p_pos);
    /* subslot_properties */
    temp_u16 = pf_get_uint16 (p_info, p_pos);
-   submodule->properties.type = pf_get_bits (temp_u16, 0, 2);
-   submodule->properties.sharedInput = (pf_get_bits (temp_u16, 2, 1) != 0);
-   submodule->properties.reduce_input_submodule_data_length =
+   p_sub->submodule_properties.type = pf_get_bits (temp_u16, 0, 2);
+   p_sub->submodule_properties.sharedInput =
+      (pf_get_bits (temp_u16, 2, 1) != 0);
+   p_sub->submodule_properties.reduce_input_submodule_data_length =
       (pf_get_bits (temp_u16, 3, 1) != 0);
-   submodule->properties.reduce_output_submodule_data_length =
+   p_sub->submodule_properties.reduce_output_submodule_data_length =
       (pf_get_bits (temp_u16, 4, 1) != 0);
-   submodule->properties.discard_ioxs = (pf_get_bits (temp_u16, 5, 1) != 0);
+   p_sub->submodule_properties.discard_ioxs =
+      (pf_get_bits (temp_u16, 5, 1) != 0);
 
    /* At least one submodule data descriptor */
-   submodule->data_descriptor[0].data_direction = pf_get_uint16 (p_info, p_pos);
-   submodule->data_descriptor[0].submodule_data_length =
+   p_sub->data_descriptor[0].data_direction = pf_get_uint16 (p_info, p_pos);
+   p_sub->data_descriptor[0].submodule_data_length =
       pf_get_uint16 (p_info, p_pos);
-   submodule->data_descriptor[0].length_iocs = pf_get_byte (p_info, p_pos);
-   submodule->data_descriptor[0].length_iops = pf_get_byte (p_info, p_pos);
-   submodule->nbr_data_descriptors = 1;
+   p_sub->data_descriptor[0].length_iocs = pf_get_byte (p_info, p_pos);
+   p_sub->data_descriptor[0].length_iops = pf_get_byte (p_info, p_pos);
+   p_sub->nbr_data_descriptors = 1;
    /* May have one more */
-   if (submodule->properties.type == PNET_DIR_IO)
+   if (p_sub->submodule_properties.type == PNET_DIR_IO)
    {
-      submodule->data_descriptor[1].data_direction =
+      p_sub->data_descriptor[1].data_direction = pf_get_uint16 (p_info, p_pos);
+      p_sub->data_descriptor[1].submodule_data_length =
          pf_get_uint16 (p_info, p_pos);
-      submodule->data_descriptor[1].submodule_data_length =
-         pf_get_uint16 (p_info, p_pos);
-      submodule->data_descriptor[1].length_iocs = pf_get_byte (p_info, p_pos);
-      submodule->data_descriptor[1].length_iops = pf_get_byte (p_info, p_pos);
-      submodule->nbr_data_descriptors = 2;
+      p_sub->data_descriptor[1].length_iocs = pf_get_byte (p_info, p_pos);
+      p_sub->data_descriptor[1].length_iops = pf_get_byte (p_info, p_pos);
+      p_sub->nbr_data_descriptors = 2;
    }
 
    LOG_DEBUG (
@@ -317,9 +318,9 @@ static void pf_get_exp_submodule (
       "BR(%d):   Subslot 0x%04x. Expected submodule 0x%" PRIx32
       " with direction %s\n",
       __LINE__,
-      submodule->subslot_number,
-      submodule->ident_number,
-      pf_cmdev_submod_dir_to_string (submodule->properties.type));
+      p_sub->subslot_number,
+      p_sub->submodule_ident_number,
+      pf_cmdev_submod_dir_to_string (p_sub->submodule_properties.type));
 }
 
 /* ======================== Public functions ======================== */
@@ -443,45 +444,39 @@ void pf_get_exp_api_module (
 {
    uint16_t ix;
    uint16_t iy;
-   uint32_t exp_api;
+   uint32_t api;
    uint16_t slot_number;
-   pf_exp_api_t * api;
-   pf_exp_api_t * this_api;
-   pf_exp_module_t * module;
+   pf_exp_api_t * p_api = NULL;
+   pf_exp_module_t * p_mod = NULL;
    uint16_t nbr_exp_api;
 
-   api = NULL;
-   module = NULL;
    nbr_exp_api = pf_get_uint16 (p_info, p_pos); /* In this block */
-
    for (ix = 0; ix < nbr_exp_api; ix++)
    {
       /* Get one module description */
-      exp_api = pf_get_uint32 (p_info, p_pos);
+      api = pf_get_uint32 (p_info, p_pos);
 
       /* Find the API if we are augmenting it */
-      for (iy = 0; iy < p_ar->exp_ident.nbr_apis; iy++)
+      for (iy = 0; iy < p_ar->nbr_exp_apis; iy++)
       {
-         this_api = &p_ar->exp_ident.api[iy];
-         if ((this_api->valid == true) && (this_api->api == exp_api))
+         if ((p_ar->exp_apis[iy].valid == true) && (p_ar->exp_apis[iy].api == api))
          {
-            api = this_api;
+            p_api = &p_ar->exp_apis[iy];
          }
       }
 
       /* If this is the first mention of this API */
-      if ((api == NULL) && (p_ar->exp_ident.nbr_apis < PNET_MAX_API))
+      if ((p_api == NULL) && (p_ar->nbr_exp_apis < PNET_MAX_API))
       {
          /* Allocate a new API */
-         api = &p_ar->exp_ident.api[p_ar->exp_ident.nbr_apis];
-         p_ar->exp_ident.nbr_apis++;
+         p_api = &p_ar->exp_apis[p_ar->nbr_exp_apis];
+         p_ar->nbr_exp_apis++;
 
-         api->api = exp_api;
-         api->nbr_modules = 0;
-         api->nbr_diff_modules = 0;
+         p_api->api = api;
+         p_api->nbr_modules = 0;
       }
 
-      if (api == NULL)
+      if (p_api == NULL)
       {
          /* This error condition is reported by caller. */
          p_info->result = PF_PARSE_OUT_OF_API_RESOURCES;
@@ -495,30 +490,30 @@ void pf_get_exp_api_module (
          slot_number = pf_get_uint16 (p_info, p_pos);
 
          /* Get a new module. */
-         if (api->nbr_modules < PNET_MAX_SLOTS)
+         if (p_api->nbr_modules < PNET_MAX_SLOTS)
          {
-            module = &api->module[api->nbr_modules];
-            api->nbr_modules++;
+            p_mod = &p_api->modules[p_api->nbr_modules];
+            p_api->nbr_modules++;
 
-            module->slot_number = slot_number;
-            module->ident_number = pf_get_uint32 (p_info, p_pos);
-            module->properties = pf_get_uint16 (p_info, p_pos);
-            module->nbr_submodules = pf_get_uint16 (p_info, p_pos);
+            p_mod->slot_number = slot_number;
+            p_mod->module_ident_number = pf_get_uint32 (p_info, p_pos);
+            p_mod->module_properties = pf_get_uint16 (p_info, p_pos);
+            p_mod->nbr_submodules = pf_get_uint16 (p_info, p_pos);
 
             LOG_DEBUG (
                PNET_LOG,
                "BR(%d): Slot %u. Expected module 0x%" PRIx32 " with %u "
                "submodules.\n",
                __LINE__,
-               module->slot_number,
-               module->ident_number,
-               module->nbr_submodules);
+               p_mod->slot_number,
+               p_mod->module_ident_number,
+               p_mod->nbr_submodules);
 
-            for (iy = 0; iy < module->nbr_submodules; iy++)
+            for (iy = 0; iy < p_mod->nbr_submodules; iy++)
             {
-               pf_get_exp_submodule (p_info, p_pos, &module->submodule[iy]);
+               pf_get_exp_submodule (p_info, p_pos, &p_mod->submodules[iy]);
             }
-            api->valid = true;
+            p_api->valid = true;
          }
          else
          {

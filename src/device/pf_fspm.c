@@ -738,7 +738,6 @@ int pf_fspm_cm_read_ind (
          }
          break;
       case PF_IDX_SUB_IM_1:
-         // TODO check length
          if ((net->fspm_cfg.im_0_data.im_supported & PNET_SUPPORTED_IM1) > 0)
          {
             LOG_INFO (
@@ -761,7 +760,6 @@ int pf_fspm_cm_read_ind (
          }
          break;
       case PF_IDX_SUB_IM_2:
-         // TODO check length
          if ((net->fspm_cfg.im_0_data.im_supported & PNET_SUPPORTED_IM2) > 0)
          {
             LOG_INFO (
@@ -783,7 +781,6 @@ int pf_fspm_cm_read_ind (
          }
          break;
       case PF_IDX_SUB_IM_3:
-         // TODO check length
          if ((net->fspm_cfg.im_0_data.im_supported & PNET_SUPPORTED_IM3) > 0)
          {
             LOG_INFO (
@@ -805,7 +802,6 @@ int pf_fspm_cm_read_ind (
          }
          break;
       case PF_IDX_SUB_IM_4:
-         // TODO check length
          if ((net->fspm_cfg.im_0_data.im_supported & PNET_SUPPORTED_IM4) > 0)
          {
             *pp_read_data = (uint8_t *)&net->fspm_cfg.im_4_data;
@@ -832,7 +828,6 @@ int pf_fspm_cm_read_ind (
    }
    else if (index == PF_IDX_DEV_LOGBOOK_DATA)
    {
-      // TODO check length
       *pp_read_data = (uint8_t *)&net->fspm_log_book;
       *p_read_length = sizeof (net->fspm_log_book);
       ret = 0;

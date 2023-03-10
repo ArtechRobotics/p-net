@@ -153,7 +153,6 @@ int pf_cmsu_cmdev_state_ind (
          }
 
          pf_alarm_close (net, p_ar);
-         pf_alarm_free_endpoint (net, p_ar);
 
          pf_cmdmc_close_req (p_ar);
 

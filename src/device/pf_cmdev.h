@@ -180,32 +180,6 @@ int pf_cmdev_get_device (pnet_t * net, pf_device_t ** pp_device);
 int pf_cmdev_get_api (pnet_t * net, uint32_t api_id, pf_api_t ** pp_api);
 
 /**
- * Get a slot instance of an API instance by slot number.
- * @param p_api            In:  The API instance.
- * @param slot_nbr         In:  The slot number.
- * @param pp_slot          Out: The slot instance.
- * @return  0 if operation succeeded.
- *         -1 if an error occurred.
- */
-int pf_cmdev_get_slot (
-   pf_api_t const * p_api,
-   uint16_t slot_nbr,
-   pf_slot_t ** pp_slot);
-
-/**
- * Get a subslot instance of a slot instance by subslot number.
- * @param p_slot           In:  The slot instance.
- * @param subslot_nbr      In:  The subslot number.
- * @param pp_subslot       Out: The subslot instance.
- * @return  0 if operation succeeded.
- *         -1 if an error occurred.
- */
-int pf_cmdev_get_subslot (
-   pf_slot_t const * p_slot,
-   uint16_t subslot_nbr,
-   pf_subslot_t ** pp_subslot);
-
-/**
  * Get a sub-slot instance from the api ID, the slot number and the sub-slot
  * number.
  * @param net              InOut: The p-net stack instance
@@ -218,7 +192,7 @@ int pf_cmdev_get_subslot (
  */
 int pf_cmdev_get_subslot_full (
    pnet_t * net,
-   uint32_t api_id,
+   uint16_t api_id,
    uint16_t slot_nbr,
    uint16_t subslot_nbr,
    pf_subslot_t ** pp_subslot);
@@ -235,7 +209,7 @@ int pf_cmdev_get_subslot_full (
  */
 int pf_cmdev_get_slot_full (
    pnet_t * net,
-   uint32_t api_id,
+   uint16_t api_id,
    uint16_t slot_nbr,
    pf_slot_t ** pp_slot);
 
@@ -250,7 +224,7 @@ int pf_cmdev_get_slot_full (
  */
 int pf_cmdev_get_module_ident (
    pnet_t * net,
-   uint32_t api_id,
+   uint16_t api_id,
    uint16_t slot_nbr,
    uint32_t * p_module_ident);
 
@@ -267,7 +241,7 @@ int pf_cmdev_get_module_ident (
  */
 int pf_cmdev_get_submodule_ident (
    pnet_t * net,
-   uint32_t api_id,
+   uint16_t api_id,
    uint16_t slot_nbr,
    uint16_t subslot_nbr,
    uint32_t * p_submodule_ident);
@@ -322,65 +296,13 @@ int pf_cmdev_get_next_diagnosis_usi (
    uint16_t * p_next_usi);
 
 /**
- * Find the expected module of an AR, addressed by the API and the
- * slot number.
- * @param ar               In:    The AR instance.
- * @param api              In:    The API.
- * @param slot_number      In:    The slot number.
- * @param exp_module       Out:   The expected module instance.
- * @return  0  if a module instance was found.
- *          -1 if the module instance was not found.
- */
-int pf_cmdev_get_exp_mod (
-   pf_ar_t * ar,
-   uint32_t api,
-   uint16_t slot_number,
-   pf_exp_module_t ** exp_module);
-
-/**
- * Find the expected submodule of an AR, addressed by the API and the
- * slot and subslot numbers.
- * @param ar               In:    The AR instance.
- * @param api              In:    The API.
- * @param slot_number      In:    The slot number.
- * @param subslot_number   In:    The subslot number.
- * @param exp_submodule    Out:   The expected submodule instance.
- * @return  0  if a submodule instance was found.
- *          -1 if the submodule instance was not found.
- */
-int pf_cmdev_get_exp_sub (
-   pf_ar_t * ar,
-   uint32_t api,
-   uint16_t slot_number,
-   uint16_t subslot_number,
-   pf_exp_submodule_t ** exp_submodule);
-
-/**
- * Generate module diff, when needed, for the specified AR.
+ * Generate module diffs, when needed, for the specified AR.
  * @param net              InOut: The p-net stack instance
- * @param ar               InOut: The AR instance.
+ * @param p_ar             InOut: The AR instance.
  * @return  0  if operation succeeded.
  *          -1 if an error occurred.
  */
-int pf_cmdev_generate_module_diff (pnet_t * net, pf_ar_t * ar);
-
-/**
- * Generate module diff focused on a specific submodule, when needed, for the
- * specified AR.
- * @param net              InOut: The p-net stack instance
- * @param ar               InOut: The AR instance.
- * @param api              In:    The API containing the submodule.
- * @param slot_number      In:    The slot containing the submodule.
- * @param subslot_number   In:    The subslot containing the submodule.
- * @return  0  if operation succeeded.
- *          -1 if an error occurred.
- */
-int pf_cmdev_generate_submodule_diff (
-   pnet_t * net,
-   pf_ar_t * ar,
-   uint32_t api,
-   uint16_t slot_number,
-   uint16_t subslot_number);
+int pf_cmdev_generate_submodule_diff (pnet_t * net, pf_ar_t * p_ar);
 
 /**
  * Return a string representation of the specified CMDEV state.

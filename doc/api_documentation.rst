@@ -1,9 +1,7 @@
-.. _api-documentation:
-
 API documentation
 =================
 Here is a brief overview given for some of the most important functions,
-structs etc in the public API for the P-Net Profinet stack.
+structs etc in the public API for the p-net Profinet stack.
 
 For detailed documentation, read the ``include/pnet_api.h`` header file. It
 also contains error code definitions etc.
@@ -37,7 +35,6 @@ Plug and pull modules/submodules
 .. doxygenfunction:: pnet_plug_submodule
 .. doxygenfunction:: pnet_pull_module
 .. doxygenfunction:: pnet_pull_submodule
-.. doxygenfunction:: pnet_sm_released_cnf
 
 
 Periodic data
@@ -104,7 +101,6 @@ to perform specific functionality.
 .. doxygentypedef:: pnet_alarm_ind
 .. doxygentypedef:: pnet_alarm_cnf
 .. doxygentypedef:: pnet_alarm_ack_cnf
-.. doxygentypedef:: pnet_sm_released_ind
 
 
 Selected enums

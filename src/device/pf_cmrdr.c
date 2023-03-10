@@ -226,11 +226,14 @@ int pf_cmrdr_rm_read_ind (
       /* Block-writer knows where to fetch and how to build the answer to ID
        * data requests. */
       case PF_IDX_SUB_EXP_ID_DATA:
-         pf_put_exp_ident_data (
-            p_ar,
+         pf_put_ident_data (
+            net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_SUBSLOT,
+            PF_BT_EXPECTED_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
+            p_ar,
             p_read_request->api,
             p_read_request->slot_number,
             p_read_request->subslot_number,
@@ -240,11 +243,13 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_SUB_REAL_ID_DATA:
-         pf_put_real_ident_data(
+         pf_put_ident_data (
             net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_SUBSLOT,
+            PF_BT_REAL_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             NULL,
             p_read_request->api,
             p_read_request->slot_number,
@@ -255,11 +260,14 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_SLOT_EXP_ID_DATA:
-         pf_put_exp_ident_data (
-            p_ar,
+         pf_put_ident_data (
+            net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_SLOT,
+            PF_BT_EXPECTED_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_SLOT,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
+            p_ar,
             p_read_request->api,
             p_read_request->slot_number,
             0,
@@ -269,11 +277,13 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_SLOT_REAL_ID_DATA:
-         pf_put_real_ident_data(
+         pf_put_ident_data (
             net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_SLOT,
+            PF_BT_REAL_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_SLOT,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             NULL,
             p_read_request->api,
             p_read_request->slot_number,
@@ -284,11 +294,14 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_AR_EXP_ID_DATA:
-         pf_put_exp_ident_data (
-            p_ar,
+         pf_put_ident_data (
+            net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_AR,
+            PF_BT_EXPECTED_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_DEVICE,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
+            p_ar,
             0,
             0,
             0,
@@ -298,11 +311,13 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_AR_REAL_ID_DATA:
-         pf_put_real_ident_data(
+         pf_put_ident_data (
             net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_AR,
+            PF_BT_REAL_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_DEVICE,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             p_ar,
             0,
             0,
@@ -313,11 +328,13 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_API_REAL_ID_DATA:
-         pf_put_real_ident_data(
+         pf_put_ident_data (
             net,
             true,
             PNET_BLOCK_VERSION_LOW_1,
-            PF_RECORD_DATA_SCOPE_API,
+            PF_BT_REAL_IDENTIFICATION_DATA,
+            PF_DEV_FILTER_LEVEL_API,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             NULL,
             p_read_request->api,
             0,
@@ -329,11 +346,13 @@ int pf_cmrdr_rm_read_ind (
          break;
 
       case PF_IDX_DEV_API_DATA:
-         pf_put_real_ident_data(
+         pf_put_ident_data (
             net,
             true,
             PNET_BLOCK_VERSION_LOW,
-            PF_RECORD_DATA_SCOPE_DEVICE,
+            PF_BT_API_DATA,
+            PF_DEV_FILTER_LEVEL_DEVICE,
+            PF_DEV_FILTER_LEVEL_API_ID,
             NULL,
             0,
             0,
@@ -463,11 +482,12 @@ int pf_cmrdr_rm_read_ind (
       /* Block-writer knows where to fetch and how to build the answer to diag
        * data requests. */
       case PF_IDX_SUB_DIAGNOSIS_CH:
-         pf_put_diagnosis_subslot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             PF_DIAG_FILTER_FAULT_STD,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
             p_read_request->subslot_number,
@@ -477,11 +497,12 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_SUB_DIAGNOSIS_ALL:
-         pf_put_diagnosis_subslot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             PF_DIAG_FILTER_FAULT_ALL,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
             p_read_request->subslot_number,
@@ -491,11 +512,12 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_SUB_DIAGNOSIS_DMQS:
-         pf_put_diagnosis_subslot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             PF_DIAG_FILTER_ALL,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
             p_read_request->subslot_number,
@@ -506,11 +528,12 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_SUB_DIAG_MAINT_REQ_CH:
       case PF_IDX_SUB_DIAG_MAINT_REQ_ALL:
-         pf_put_diagnosis_subslot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             PF_DIAG_FILTER_M_REQ,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
             p_read_request->subslot_number,
@@ -521,11 +544,12 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_SUB_DIAG_MAINT_DEM_CH:
       case PF_IDX_SUB_DIAG_MAINT_DEM_ALL:
-         pf_put_diagnosis_subslot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SUBSLOT,
             PF_DIAG_FILTER_M_DEM,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
             p_read_request->subslot_number,
@@ -536,39 +560,45 @@ int pf_cmrdr_rm_read_ind (
          break;
 
       case PF_IDX_SLOT_DIAGNOSIS_CH:
-         pf_put_diagnosis_slot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SLOT,
             PF_DIAG_FILTER_FAULT_STD,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
          ret = 0;
          break;
       case PF_IDX_SLOT_DIAGNOSIS_ALL:
-         pf_put_diagnosis_slot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SLOT,
             PF_DIAG_FILTER_FAULT_ALL,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
          ret = 0;
          break;
       case PF_IDX_SLOT_DIAGNOSIS_DMQS:
-         pf_put_diagnosis_slot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SLOT,
             PF_DIAG_FILTER_ALL,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -576,13 +606,15 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_SLOT_DIAG_MAINT_REQ_CH:
       case PF_IDX_SLOT_DIAG_MAINT_REQ_ALL:
-         pf_put_diagnosis_slot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SLOT,
             PF_DIAG_FILTER_M_REQ,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -590,13 +622,15 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_SLOT_DIAG_MAINT_DEM_CH:
       case PF_IDX_SLOT_DIAG_MAINT_DEM_ALL:
-         pf_put_diagnosis_slot(
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_SLOT,
             PF_DIAG_FILTER_M_DEM,
-            p_ar,
+            NULL,
             p_read_request->api,
             p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -604,33 +638,45 @@ int pf_cmrdr_rm_read_ind (
          break;
 
       case PF_IDX_API_DIAGNOSIS_CH:
-         pf_put_diagnosis_api (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_API,
             PF_DIAG_FILTER_FAULT_STD,
+            NULL,
             p_read_request->api,
+            p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
          ret = 0;
          break;
       case PF_IDX_API_DIAGNOSIS_ALL:
-         pf_put_diagnosis_api (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_API,
             PF_DIAG_FILTER_FAULT_ALL,
+            NULL,
             p_read_request->api,
+            p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
          ret = 0;
          break;
       case PF_IDX_API_DIAGNOSIS_DMQS:
-         pf_put_diagnosis_api (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_API,
             PF_DIAG_FILTER_ALL,
+            NULL,
             p_read_request->api,
+            0,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -638,11 +684,15 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_API_DIAG_MAINT_REQ_CH:
       case PF_IDX_API_DIAG_MAINT_REQ_ALL:
-         pf_put_diagnosis_api (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_API,
             PF_DIAG_FILTER_M_REQ,
+            NULL,
             p_read_request->api,
+            p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -650,11 +700,15 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_API_DIAG_MAINT_DEM_CH:
       case PF_IDX_API_DIAG_MAINT_DEM_ALL:
-         pf_put_diagnosis_api (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_API,
             PF_DIAG_FILTER_M_DEM,
+            NULL,
             p_read_request->api,
+            p_read_request->slot_number,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -662,33 +716,45 @@ int pf_cmrdr_rm_read_ind (
          break;
 
       case PF_IDX_AR_DIAGNOSIS_CH:
-         pf_put_diagnosis_ar (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_DEVICE,
             PF_DIAG_FILTER_FAULT_STD,
             p_ar,
+            0,
+            0,
+            0,
             res_size,
             p_res,
             p_pos);
          ret = 0;
          break;
       case PF_IDX_AR_DIAGNOSIS_ALL:
-         pf_put_diagnosis_ar (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_DEVICE,
             PF_DIAG_FILTER_FAULT_ALL,
             p_ar,
+            0,
+            0,
+            0,
             res_size,
             p_res,
             p_pos);
          ret = 0;
          break;
       case PF_IDX_AR_DIAGNOSIS_DMQS:
-         pf_put_diagnosis_ar (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_DEVICE,
             PF_DIAG_FILTER_ALL,
             p_ar,
+            0,
+            0,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -696,11 +762,15 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_AR_DIAG_MAINT_REQ_CH:
       case PF_IDX_AR_DIAG_MAINT_REQ_ALL:
-         pf_put_diagnosis_ar (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_DEVICE,
             PF_DIAG_FILTER_M_REQ,
             p_ar,
+            0,
+            0,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -708,11 +778,15 @@ int pf_cmrdr_rm_read_ind (
          break;
       case PF_IDX_AR_DIAG_MAINT_DEM_CH:
       case PF_IDX_AR_DIAG_MAINT_DEM_ALL:
-         pf_put_diagnosis_ar (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_DEVICE,
             PF_DIAG_FILTER_M_DEM,
             p_ar,
+            0,
+            0,
+            0,
             res_size,
             p_res,
             p_pos);
@@ -720,10 +794,15 @@ int pf_cmrdr_rm_read_ind (
          break;
 
       case PF_IDX_DEV_DIAGNOSIS_DMQS:
-         pf_put_diagnosis_device (
+         pf_put_diag_data (
             net,
             true,
+            PF_DEV_FILTER_LEVEL_DEVICE,
             PF_DIAG_FILTER_ALL,
+            NULL, /* Do not filter by AR */
+            0,    /* API */
+            0,    /* Slot */
+            0,    /* Subslot */
             res_size,
             p_res,
             p_pos);
@@ -751,11 +830,11 @@ int pf_cmrdr_rm_read_ind (
          ret = 0;
          break;
       case PF_IDX_AR_MOD_DIFF:
-         /* On implicit with p_ar == NULL pf_cmdev_generate_module_diff
+         /* On implicit with p_ar == NULL pf_cmdev_generate_submodule_diff
           * will return -1
           * In this case pf_put_ar_diff will not give an empty response
           */
-         (void)pf_cmdev_generate_module_diff (net, p_ar);
+         (void)pf_cmdev_generate_submodule_diff (net, p_ar);
          pf_put_ar_diff (true, p_ar, res_size, p_res, p_pos);
          ret = 0;
          break;

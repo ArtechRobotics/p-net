@@ -1,7 +1,5 @@
-.. _sampleapp-details:
-
-Sample application details
-==========================
+Sample app details
+==================
 
 Cyclic data timing
 ------------------
@@ -26,7 +24,7 @@ be sent with 4 times longer interval (i.e. every 4 ms) from the IO-device.
 Using more modules
 ------------------
 If necessary, increase the values for ``PNET_MAX_SLOTS`` and
-``PNET_MAX_SUBSLOTS`` in :file:`include/pnet_api.h`.
+``PNET_MAX_SUBSLOTS`` in ``include/pnet_api.h``.
 
 In the sample app, the input data is written to all input modules ("8 bit in +
 8 bit out" and "8 bit in"). The LED is controlled by the output module ("8 bit

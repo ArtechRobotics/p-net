@@ -446,12 +446,7 @@ int pf_ppm_get_ar_iocr_desc (
       pf_cmdev_get_subslot_full (net, api_id, slot_nbr, subslot_nbr, &p_subslot) ==
       0)
    {
-      if (
-         (p_subslot->ownsm_state == PF_OWNSM_STATE_IOC) ||
-         (p_subslot->ownsm_state == PF_OWNSM_STATE_IOS))
-      {
-         p_ar = p_subslot->owner;
-      }
+      p_ar = p_subslot->p_ar;
    }
 
    if (p_ar == NULL)
